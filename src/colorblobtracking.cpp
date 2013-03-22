@@ -3,7 +3,7 @@
 #include "opencv/highgui.h"
 
 //TODO:
-// - make centroid calculation more robust
+// - make centroid calculation more robust (hint: simple blob detector, findcontour)
 // - implement publishing messages (x and y position of the blob centroid), ref: ROS beginner tutorials
 
 IplImage* getHSVThresholdedImg(IplImage* img, int lo_h, int lo_s, int lo_v, int hi_h, int hi_s, int hi_v);
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	//int lo_h = 0, lo_s = 0, lo_v = 0, hi_h = 180, hi_s = 255, hi_v = 255;
 	// this is for green
 	int lo_h = 23, lo_s = 68, lo_v = 81, hi_h = 60, hi_s = 174, hi_v = 228;
-	createTrackbar("Lo H", "Output", &lo_h, 255);
+	createTrackbar("Lo H", "Output", &lo_h, 180);
 	createTrackbar("Lo S", "Output", &lo_s, 255);
 	createTrackbar("Lo V", "Output", &lo_v, 255);
 	createTrackbar("Hi H", "Output", &hi_h, 180);
@@ -46,9 +46,26 @@ int main(int argc, char** argv)
 
 		IplImage* threshImg = getHSVThresholdedImg(srcImg, lo_h, lo_s, lo_v, hi_h, hi_s, hi_v);
 		
-		// Centroid calculation
-		CvPoint centroid = calculateCentroid(threshImg);
+		// contour test begin
+		// Page 243-244
+		// http://books.google.de/books?id=seAgiOfu2EIC&pg=PA234&lpg=PA234&dq=cvFindContours&source=bl&ots=hSJ3eleCKa&sig=tdP8PSgr1azn2Im8rmqSGhzonBU&hl=en&sa=X&ei=QW1MUc3TCIXltQaB94CwAQ&ved=0CGUQ6AEwBQ#v=onepage&q=cvFindContours&f=false
+		/**
+		CvMemStorage* storage = cvCreateMemStorage();
+		CvSeq* first_contour = NULL;
 		
+		int Nc cvFindContours(threshImg, storage, &first_contour, sizeof(CvContour), CV_RETR_LIST);
+		
+		int n=0;
+		ROS_INFO("Total contours detected: %d", Nc);
+		for( CvSeq* c = first_contour; c != NULL; c = c->h_next) {
+			cvDrawContours(srcImg, c, CVX_RED, CVX_BLUE, 0, 2, 8);
+		}
+		*/
+		// contour test end
+		
+		
+		// Centroid calculation and display
+		CvPoint centroid = calculateCentroid(threshImg);
 		cvCircle(srcImg, centroid, 5, cvScalar(0, 0, 255), 5);
 		
 		cvShowImage("Webcam", srcImg);
