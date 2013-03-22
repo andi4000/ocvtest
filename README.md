@@ -1,0 +1,1 @@
+Testing OpenCV webcam capture in ROS. With simple green object centroid detection
