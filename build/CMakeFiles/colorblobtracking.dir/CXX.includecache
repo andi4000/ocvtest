@@ -13,6 +13,12 @@ opencv/cv.h
 /home/ariandy/ros_workspace/ocvtest/src/opencv/cv.h
 opencv/highgui.h
 /home/ariandy/ros_workspace/ocvtest/src/opencv/highgui.h
+iostream
+-
+stdio.h
+-
+stdlib.h
+-
 
 /opt/ros/fuerte/include/XmlRpcDecl.h
 ros/macros.h
