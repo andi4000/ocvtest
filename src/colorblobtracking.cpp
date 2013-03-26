@@ -6,8 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "std_msgs/Bool.h"
+#include "std_msgs/Int32.h"
+#include "std_msgs/Float32.h"
+
 //TODO:
 // - make everything standardized CPP!
+// - COMPILATION FAIL WITH THIS NEW ROS MESSAGE CONVERSION STUFF
 
 //TODO:
 // messages:
@@ -31,6 +36,18 @@ int main(int argc, char** argv)
 	} else {
 		ROS_INFO("Opening webcam");
 	}
+	
+	// ROS MESSAGE BEGIN
+	// Ref: http://www.ros.org/wiki/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
+	ros::init(argc, argv, "object_tracking_node");
+	ros::NodeHandle n;
+	ros::Publisher object_detected_pub = n.advertise<std_msgs::Bool>("object_tracking", 1000);
+	ros::Publisher x_pos_pub = n.advertise<std_msgs::Int32>("object_tracking", 1000);
+	ros::Publisher y_pos_pub = n.advertise<std_msgs::Int32>("object_tracking", 1000);
+	ros::Publisher area_pub = n.advertise<std_msgs::Float32>("object_tracking", 1000);
+	
+	ros::Rate loop_rate(50);
+	// ROS MESSAGE END
 	
 	int capSizeX = 640;
 	int capSizeY = 480;
@@ -71,7 +88,7 @@ int main(int argc, char** argv)
 		findContours(threshMat, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 		
 		vector<double> areas(contours.size());
-		for (int i = 0; i < contours.size(); i++)
+		for (unsigned int i = 0; i < contours.size(); i++)
 			areas[i] = contourArea(Mat(contours[i]));
 		
 		double max_area;
@@ -98,12 +115,12 @@ int main(int argc, char** argv)
 		Point relative_centroid(0, 0);
 		if (got_it){
 			vector<Moments> mu(contours.size());
-			for ( int i = 0; i < contours.size(); i++ ) {
+			for ( unsigned int i = 0; i < contours.size(); i++ ) {
 				mu[i] = moments(contours[i], false);
 			}
 			
 			vector<Point> mc(contours.size());
-			for ( int i = 0; i < contours.size(); i++ ) {
+			for ( unsigned int i = 0; i < contours.size(); i++ ) {
 				mc[i] = Point( mu[i].m10/mu[i].m00, mu[i].m01/mu[i].m00 );
 			}
 			
@@ -119,14 +136,35 @@ int main(int argc, char** argv)
 		}
 		// GETTING THE CENTROID END
 		
-		
-		
 		imshow("Output", threshMat);
 		imshow("Webcam", srcMat);
 		// CONTOUR TEST PART2 END
 		
 		//cvShowImage("Webcam", srcImg);
 		//cvShowImage("Output", threshImg);
+		
+		
+		// ROS MESSAGE BEGIN
+		//TODO: COMPILATION FAIL
+		while (ros::ok()){
+			std_msgs::Bool msg_obj_det;
+			std_msgs::Int32 msg_x_pos, msg_y_pos;
+			std_msgs::Float32 msg_area;
+			
+			msg_obj_det.data = got_it;
+			msg_x_pos = (int)relative_centroid.x;
+			msg_y_pos = (int)relative_centroid.y;
+			msg_area = max_area;
+			
+			object_detected_pub.publish(msg_obj_det);
+			x_pos_pub.publish(msg_x_pos);
+			y_pos_pub.publish(msg_y_pos);
+			area_pub.publish(msg_area);
+			
+			ros::spinOnce();
+			loop_rate.sleep();
+		}
+		// ROS MESSAGE END
 		
 		// press ESC to exit
 		if ( (cvWaitKey(10) & 255) == 27 ) break;

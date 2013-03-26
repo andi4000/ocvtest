@@ -19,6 +19,12 @@ stdio.h
 -
 stdlib.h
 -
+std_msgs/Bool.h
+/home/ariandy/ros_workspace/ocvtest/src/std_msgs/Bool.h
+std_msgs/Int32.h
+/home/ariandy/ros_workspace/ocvtest/src/std_msgs/Int32.h
+std_msgs/Float32.h
+/home/ariandy/ros_workspace/ocvtest/src/std_msgs/Float32.h
 
 /opt/ros/fuerte/include/XmlRpcDecl.h
 ros/macros.h
@@ -870,6 +876,10 @@ boost/make_shared.hpp
 
 /opt/ros/fuerte/include/ros/message_forward.h
 
+/opt/ros/fuerte/include/ros/message_operations.h
+ostream
+-
+
 /opt/ros/fuerte/include/ros/message_traits.h
 message_forward.h
 /opt/ros/fuerte/include/ros/message_forward.h
@@ -1279,4 +1289,52 @@ ros/forwards.h
 /opt/ros/fuerte/include/ros/ros/forwards.h
 
 /opt/ros/fuerte/include/rosconsole/macros_generated.h
+
+/opt/ros/fuerte/include/std_msgs/Bool.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
+/opt/ros/fuerte/include/std_msgs/Float32.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
+/opt/ros/fuerte/include/std_msgs/Int32.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
 

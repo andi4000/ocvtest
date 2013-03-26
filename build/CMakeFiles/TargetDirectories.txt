@@ -8,6 +8,7 @@
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rosbuild_precompile.dir
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rosbuild_premsgsrvgen.dir
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rospack_genmsg.dir
+/home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rospack_genmsg_all.dir
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rospack_genmsg_libexe.dir
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/rospack_gensrv.dir
 /home/ariandy/ros_workspace/ocvtest/build/CMakeFiles/test.dir

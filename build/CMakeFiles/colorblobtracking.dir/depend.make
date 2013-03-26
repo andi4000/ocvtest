@@ -72,6 +72,7 @@ CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/includ
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/message.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/message_event.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/message_forward.h
+CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/message_operations.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/message_traits.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/names.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/node_handle.h
@@ -107,4 +108,7 @@ CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/includ
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/wall_timer.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/ros/wall_timer_options.h
 CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/rosconsole/macros_generated.h
+CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/std_msgs/Bool.h
+CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/std_msgs/Float32.h
+CMakeFiles/colorblobtracking.dir/src/colorblobtracking.o: /opt/ros/fuerte/include/std_msgs/Int32.h
 
