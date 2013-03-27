@@ -1,25 +1,20 @@
 #include "ros/ros.h"
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
-
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 #include "std_msgs/Bool.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/Float32.h"
 
-//TODO:
-// - make everything standardized CPP!
-// - COMPILATION FAIL WITH THIS NEW ROS MESSAGE CONVERSION STUFF
-
-//TODO:
-// messages:
-// - object_detected state
-// - x position
-// - y position
-// - area
+/**
+ * //TODO
+ * - make everything standardized CPP!
+ * - put everything into modular functions!
+ * 
+ * things that are still in C
+ * - getHSVThresholdedImg function
+ * - camera capture
+ */
 
 IplImage* getHSVThresholdedImg(IplImage* img, int lo_h, int lo_s, int lo_v, int hi_h, int hi_s, int hi_v);
 
@@ -41,23 +36,20 @@ int main(int argc, char** argv)
 	// Ref: http://www.ros.org/wiki/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
 	ros::init(argc, argv, "object_tracking_node");
 	ros::NodeHandle n;
-	ros::Publisher object_detected_pub = n.advertise<std_msgs::Bool>("object_tracking", 1000);
-	ros::Publisher x_pos_pub = n.advertise<std_msgs::Int32>("object_tracking", 1000);
-	ros::Publisher y_pos_pub = n.advertise<std_msgs::Int32>("object_tracking", 1000);
-	ros::Publisher area_pub = n.advertise<std_msgs::Float32>("object_tracking", 1000);
-	
+	ros::Publisher object_detected_pub = n.advertise<std_msgs::Bool>("object_tracking/object_detected", 1000);
+	ros::Publisher x_pos_pub = n.advertise<std_msgs::Int32>("object_tracking/x_pos", 1000);
+	ros::Publisher y_pos_pub = n.advertise<std_msgs::Int32>("object_tracking/y_pos", 1000);
+	ros::Publisher area_pub = n.advertise<std_msgs::Float32>("object_tracking/area", 1000);
 	ros::Rate loop_rate(50);
 	// ROS MESSAGE END
 	
 	int capSizeX = 640;
 	int capSizeY = 480;
 	
-	cvNamedWindow("Webcam", CV_WINDOW_AUTOSIZE);
-	cvNamedWindow("Output", CV_WINDOW_AUTOSIZE);
-	
-	cvMoveWindow("Webcam", 0*capSizeX, 0);
-	cvMoveWindow("Output", 1*capSizeX, 0);
-	
+	namedWindow("Webcam", CV_WINDOW_AUTOSIZE);
+	namedWindow("Output", CV_WINDOW_AUTOSIZE);
+	moveWindow("Webcam", 0*capSizeX, 0);
+	moveWindow("Output", 1*capSizeX, 0);
 	
 	// HSV max and min values in opencv
 	//int lo_h = 0, lo_s = 0, lo_v = 0, hi_h = 180, hi_s = 255, hi_v = 255;
@@ -70,7 +62,9 @@ int main(int argc, char** argv)
 	createTrackbar("Hi S", "Output", &hi_s, 255);
 	createTrackbar("Hi V", "Output", &hi_v, 255);
 	
-	while(1){
+	
+	// ROS SIGINT handler
+	while(ros::ok()){
 		IplImage* srcImg = cvQueryFrame(capture);
 		if (!srcImg) {
 			ROS_ERROR("Failed to get frame from camera!");
@@ -104,11 +98,7 @@ int main(int argc, char** argv)
 		else
 			ROS_INFO("nothing");
 		// draw only the biggest contour
-		
 		drawContours(srcMat, contours, maxPosition.y, Scalar(0, 0, 255), CV_FILLED);
-		
-		//TODO:
-		// - put each on functions!
 		
 		// GETTING THE CENTROID BEGIN
 		Point image_centroid(0, 0);
@@ -139,40 +129,32 @@ int main(int argc, char** argv)
 		imshow("Output", threshMat);
 		imshow("Webcam", srcMat);
 		// CONTOUR TEST PART2 END
-		
-		//cvShowImage("Webcam", srcImg);
-		//cvShowImage("Output", threshImg);
-		
-		
+				
 		// ROS MESSAGE BEGIN
-		//TODO: COMPILATION FAIL
-		while (ros::ok()){
-			std_msgs::Bool msg_obj_det;
-			std_msgs::Int32 msg_x_pos, msg_y_pos;
-			std_msgs::Float32 msg_area;
-			
-			msg_obj_det.data = got_it;
-			msg_x_pos = (int)relative_centroid.x;
-			msg_y_pos = (int)relative_centroid.y;
-			msg_area = max_area;
-			
-			object_detected_pub.publish(msg_obj_det);
-			x_pos_pub.publish(msg_x_pos);
-			y_pos_pub.publish(msg_y_pos);
-			area_pub.publish(msg_area);
-			
-			ros::spinOnce();
-			loop_rate.sleep();
-		}
+		std_msgs::Bool msg_obj_det;
+		std_msgs::Int32 msg_x_pos, msg_y_pos;
+		std_msgs::Float32 msg_area;
+		
+		msg_obj_det.data = got_it;
+		msg_x_pos.data = relative_centroid.x;
+		msg_y_pos.data = relative_centroid.y;
+		msg_area.data = max_area;
+		
+		object_detected_pub.publish(msg_obj_det);
+		x_pos_pub.publish(msg_x_pos);
+		y_pos_pub.publish(msg_y_pos);
+		area_pub.publish(msg_area);
+		
+		ros::spinOnce();
+		loop_rate.sleep();
 		// ROS MESSAGE END
 		
 		// press ESC to exit
-		if ( (cvWaitKey(10) & 255) == 27 ) break;
+		if ( (waitKey(10) & 255) == 27 ) break;
 	}
 	
 	cvReleaseCapture(&capture);
-	cvDestroyWindow("Webcam");
-	cvDestroyWindow("Output");
+	destroyAllWindows();
 	
 	return 0;
 }
